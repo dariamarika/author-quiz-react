@@ -1,9 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { BrowserRouter, Route } from 'react-router-dom';
 import './index.css';
 import AuthorQuiz from './AuthorQuiz';
 import registerServiceWorker from './registerServiceWorker';
-import {shuffle, sample} from 'underscore';
+import { shuffle, sample } from 'underscore';
 
 const authors = [
     {
@@ -50,7 +51,7 @@ function getTurnData(authors) {
     const allBooks = authors.reduce((p, c, i) => {
         return p.concat(c.books);
     }, []);
-    const fourRandomBooks = shuffle(allBooks).slice(0,4);
+    const fourRandomBooks = shuffle(allBooks).slice(0, 4);
     const answer = sample(fourRandomBooks);
 
     return {
@@ -70,8 +71,28 @@ function onAnswerSelected(answer) {
     render();
 }
 
+function App() {
+    return (
+        <AuthorQuiz {...state} onAnswerSelected={onAnswerSelected} />
+    );
+}
+
+function AddAuthorForm({ match }) {
+    return <div>
+        <h1>Add Author</h1>
+        <p>{JSON.stringify(match)}</p>
+    </div>
+}
+
 function render() {
-    ReactDOM.render(<AuthorQuiz {...state} onAnswerSelected={onAnswerSelected}/>, document.getElementById('root'));
+    ReactDOM.render(
+        <BrowserRouter>
+            <React.Fragment>
+                <Route exact path="/" component={App} />
+                <Route exct path="/add" component={AddAuthorForm} />
+            </React.Fragment>
+        </BrowserRouter>,
+        document.getElementById('root'));
 }
 render();
 registerServiceWorker();
