@@ -17,13 +17,13 @@ function Hero() {
 
 function Book({ title, onClick }) {
   return (
-    <div className="answer" onClick={() => {onClick(title)}}>
+    <div className="answer" onClick={() => { onClick(title) }}>
       <h4>{title}</h4>
     </div>
   );
 }
 
-function Turn({ author, books, highlight, onAnswerSelected}) {
+function Turn({ author, books, highlight, onAnswerSelected }) {
   function highlightToBgColor(highlight) {
     const mapping = {
       'none': '',
@@ -34,12 +34,12 @@ function Turn({ author, books, highlight, onAnswerSelected}) {
   }
 
   return (
-    <div className="row turn" style={{ backgroundColor: highlightToBgColor(highlight)}}>
+    <div className="row turn" style={{ backgroundColor: highlightToBgColor(highlight) }}>
       <div className="col-4 offset-1">
         <img src={author.imageUrl} className="authorImage" alt="Author" />
       </div>
       <div className="col-5 offset-1">
-        {books.map((title) => <Book title={title} key={title} onClick={onAnswerSelected}/>)}
+        {books.map((title) => <Book title={title} key={title} onClick={onAnswerSelected} />)}
       </div>
     </div>
   );
@@ -51,13 +51,21 @@ Turn.propTypes = {
     imageUrl: PropTypes.string.isRequired,
     imageSource: PropTypes.string.isRequired,
     books: PropTypes.arrayOf(PropTypes.string).isRequired,
-    onAnswerSelected: PropTypes.func.isRequired,
-    highlight: PropTypes.string.isRequired,
   }),
+  onAnswerSelected: PropTypes.func.isRequired,
+  highlight: PropTypes.string.isRequired,
 }
 
-function Continue() {
-  return (<div></div>);
+function Continue({ show, onContinue }) {
+  return (
+    <div className="row continue">
+      {show
+        ? <div className="col-11">
+          <button className="btn btn-primary btn-lg float-right" onClick={onContinue}>Continue</button>
+        </div>
+        : null}
+    </div>
+  );
 }
 
 function Footer() {
@@ -70,12 +78,12 @@ function Footer() {
   );
 }
 
-function AuthorQuiz({ turnData, highlight, onAnswerSelected }) {
+function AuthorQuiz({ turnData, highlight, onAnswerSelected, onContinue }) {
   return (
     <div className="container-fluid">
       <Hero />
       <Turn {...turnData} highlight={highlight} onAnswerSelected={onAnswerSelected} />
-      <Continue />
+      <Continue show={highlight === 'correct'} onContinue={onContinue} />
       <Link to="/add">Add an author</Link>
       <Footer />
     </div>
